@@ -3,12 +3,13 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * A Pedestrian that tries to walk across the street
  */
-public class Pedestrian extends SuperSmoothMover
+public abstract class Pedestrian extends SuperSmoothMover
 {
     protected double speed;
     protected double maxSpeed;
     protected int direction; // direction is always -1 or 1, for moving down or up, respectively
     protected boolean awake;
+    GreenfootSound hitSound = new GreenfootSound("sounds/pedestrian hit.mp3");
     public Pedestrian(int direction) {
         this.direction = direction;
         this.awake = true;
@@ -22,6 +23,7 @@ public class Pedestrian extends SuperSmoothMover
         speed = 0;
         setRotation (90);
         awake = false;
+        hitSound.play();
     }
     
     public void healMe () {
@@ -32,6 +34,11 @@ public class Pedestrian extends SuperSmoothMover
     
     public boolean isAwake () {
         return awake;
+    }
+    
+    public void setSpeed(double newSpeed)
+    {
+        speed = newSpeed;
     }
     
     public void move(int direction, double speed)

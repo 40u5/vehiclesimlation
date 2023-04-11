@@ -12,7 +12,11 @@ public abstract class Vehicle extends SuperSmoothMover
     protected boolean moving;
     protected int yOffset;
     protected VehicleSpawner origin;
-    
+    protected boolean crashed = false;
+    protected boolean pushed = false;
+    private GreenfootSound hitSound = new GreenfootSound("sounds/car hit.mp3");
+    protected GreenfootSound bulldozerSound = new GreenfootSound("sounds/bulldozer.mp3");
+    private boolean hitSoundPlayed = false;
     protected abstract void checkHitPedestrian ();
 
     public Vehicle (VehicleSpawner origin) {
@@ -21,7 +25,6 @@ public abstract class Vehicle extends SuperSmoothMover
         
         if (origin.facesRightward()){
             direction = 1;
-            
         } else {
             direction = -1;
             getImage().mirrorHorizontally();
@@ -68,35 +71,30 @@ public abstract class Vehicle extends SuperSmoothMover
         }else {
             speed = ahead.getSpeed();
         }
+        checkHitPedestrian();
+        Bulldozer bulldozer = (Bulldozer)getOneIntersectingObject(Bulldozer.class);
+        if (bulldozer != null)
+        {
+            bulldozer.push(this);
+        }
         move (speed * direction);
-    }   
+    }
 
     /**
-     * An accessor that can be used to get this Vehicle's speed. Used, for example, when a vehicle wants to see
-     * if a faster vehicle is ahead in the lane.
+     * Accessor methods
      */
     public double getSpeed(){
         return speed;
     }
     
-    public void setSpeed(double speed)
+    public void push(Vehicle vehicle)
     {
-        this.speed = speed;
+        System.out.println("a vehicle push method is being called");
+        return;
     }
     
-    public int getDirection()
-    {
-        return direction;
-    }
     
-    public boolean crash(Vehicle other)
-    {
-        if (other != null && !(direction == other.direction))
-        {
-            speed = 0;
-            other.setSpeed(0);
-            return true;
-        }
-        return false;
-    }
+    /*even though I only call the push when object is intance of bulldozer
+    *a push method is needed in the vehicle class
+    */
 }
